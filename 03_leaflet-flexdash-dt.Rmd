@@ -1,0 +1,118 @@
+---
+title: "Leaflet + Flexdashboard + DT"
+author: "Matt Dray"
+output:
+  flexdashboard::flex_dashboard:
+    theme: paper
+---
+
+```{r setup, include=FALSE}
+# prep workspace
+sch <- readRDS("data/gias_sample.RDS")
+library(dplyr)  # tidy data manipulation
+library(leaflet)  # interative mapping
+library(DT)  # interactive tables
+```
+
+Column {data-width=400}
+-------------------------------------
+
+### About
+
+#### How to
+
+* Filter the data (options above) and the map and table will auto-update
+* You can also select points using the movable/resizeable selection tool (click the broken rectangle button in the upper left of the map)
+* You can also click rows of the datatable to highlight those points
+* Zoom with the + and - buttons on the map (upper left), or with your mouse wheel
+* Click markers to get information about that point
+
+#### Purpose
+
+* Mapping ([leaflet](https://rstudio.github.io/leaflet/)) geolocation ([freegeoip](https://github.com/luiscape/freegeoip)) of artificially-generated IP addresses ([generator](https://github.com/paulhendricks/generator)) with arbitrarily-assigned colours and icons ([ionicons](http://ionicons.com/))
+* Wrapping this into a user-friendly interface ([flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/)) and including a table ([DT](https://rstudio.github.io/DT/))
+* Allowing data selections to impact across both the map and table ([crosstalk](https://rstudio.github.io/crosstalk/))
+
+*Note that none of these data are real. They've been randomly generated.*
+
+### Datatable
+    
+```{r}
+DT::datatable(
+  sch,
+  filter = "top",
+  extensions = "Scroller",
+  rownames = FALSE,
+  style = "bootstrap",
+  class = "compact",
+  width = "100%",
+  options = list(deferRender = TRUE, scrollY = 300, scroller = TRUE))
+```
+
+Column {data-width=600}
+-------------------------------------
+    
+### Interactive map
+    
+```{r map}
+sch %>% 
+  leaflet::leaflet() %>%
+  leaflet::addProviderTiles(providers$OpenStreetMap) %>% 
+  leaflet::addAwesomeMarkers(
+    popup = ~paste0(
+      "<h2>", sch$sch_name, "</h2>",
+      
+      "<table style='width:100%'>",
+      
+      "<tr>",
+      "<th>URN</th>",
+      "<th>", sch$sch_urn, "</th>",
+      "</tr>",
+      
+      "<tr>",
+      "<tr>",
+      "<th>Phase</th>",
+      "<th>", sch$sch_phase, "</th>",
+      "</tr>",
+      
+      "<tr>",
+      "<tr>",
+      "<th>Type</th>",
+      "<th>", sch$sch_type, "</th>",
+      "</tr>",
+      
+      "<tr>",
+      "<tr>",
+      "<th>Location</th>",
+      "<th>", sch$geo_town, ", ", sch$geo_postcode, "</th>",
+      "</tr>",
+      
+      "<tr>",
+      "<tr>",
+      "<th>LA</th>",
+      "<th>", sch$geo_la, "</th>",
+      "</tr>"
+    ),  # end popup()
+    
+
+    icon = awesomeIcons(
+      
+      library = "fa",
+
+      icon = ifelse(
+        test = sch$ofsted_rating == "Outstanding",
+        yes = "fa-star",
+        no = "fa-circle"
+      ),
+
+      iconColor = "white",
+      
+      markerColor = ifelse(
+        test = sch$sch_phase == "Primary", 
+        yes = "red",
+        no = "blue"
+      )
+    )
+    
+  )  # end addAwesomeMarkers()
+```

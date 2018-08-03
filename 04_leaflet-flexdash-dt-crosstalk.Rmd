@@ -22,41 +22,52 @@ Interactives
 Column {data-width=400}
 -------------------------------------
 
-### About
-
-#### Filters
-
-You can select multiple groups, devices and countries.
+### Filters
 
 ```{r filters}
-
 filter_select(
   id = "geo_la",
   label = "Local authority",
   sharedData = sd,
   group = ~geo_la
 )
-filter_checkbox(
-  id = "sch_phase",
-  label = "Phase",
-  sharedData = sd,
-  group = ~sch_phase
+
+bscols(
+  filter_checkbox(
+    id = "ofsted_rating",
+    label = "Ofsted grade",
+    sharedData = sd,
+    group = ~ofsted_rating
+  ),
+  filter_checkbox(
+    id = "sch_phase",
+    label = "Phase",
+    sharedData = sd,
+    group = ~sch_phase
+  )
 )
-filter_checkbox(
-  id = "ofsted_rating",
-  label = "Ofsted grade",
-  sharedData = sd,
-  group = ~ofsted_rating
-)
-filter_slider(
-  id = "pup_count",
-  label = "Pupil count",
-  sharedData = sd,
-  column = ~pup_count,
-  step = 10,
-  round = TRUE,
-  sep = "",
-  ticks = FALSE
+
+bscols(
+  filter_slider(
+    id = "pup_count",
+    label = "Pupil count",
+    sharedData = sd,
+    column = ~pup_count,
+    step = 10,
+    round = TRUE,
+    sep = "",
+    ticks = FALSE
+  ),
+  filter_slider(
+    id = "pup_percent_fsm",
+    label = "Percentage Free School Meals",
+    sharedData = sd,
+    column = ~pup_percent_fsm,
+    step = 1,
+    round = TRUE,
+    sep = "",
+    ticks = FALSE
+  )
 )
 ```
 

@@ -3,7 +3,7 @@
 # Matt Dray
 # July 2018
 
-# This file: get and prepare data for use in a series of outputs taht show the
+# This file: get and prepare data for use in a series of outputs thst show the
 # progression of solutions to a policy need in my department.
 
 
@@ -94,7 +94,6 @@ gias_sf <- sf::st_as_sf(
   crs = 27700  # coordinate reference system code for eastings/northings
 ) %>% 
   sf::st_transform(crs = 4326)  # the coord ref system code for latlong
-
 
 
 # Random sample -----------------------------------------------------------

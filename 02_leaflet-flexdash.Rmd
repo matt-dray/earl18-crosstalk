@@ -4,6 +4,7 @@ author: "Matt Dray"
 output:
   flexdashboard::flex_dashboard:
     theme: paper
+    favicon: img/map.png
 ---
 
 ```{r setup, include=FALSE}
@@ -20,19 +21,47 @@ Column {data-width=400}
 
 #### How to
 
-* Filter the data (options above) and the map and table will auto-update
-* You can also select points using the movable/resizeable selection tool (click the broken rectangle button in the upper left of the map)
-* You can also click rows of the datatable to highlight those points
-* Zoom with the + and - buttons on the map (upper left), or with your mouse wheel
-* Click markers to get information about that point
+* click to grab and drag the map around
+* zoom with the '+' and '--' buttons (top-left) or with your mouse's scroll wheel
+* click a marker to reveal a popup with information about that school
 
-#### Purpose
+#### Blurb
 
-* Mapping ([leaflet](https://rstudio.github.io/leaflet/)) geolocation ([freegeoip](https://github.com/luiscape/freegeoip)) of artificially-generated IP addresses ([generator](https://github.com/paulhendricks/generator)) with arbitrarily-assigned colours and icons ([ionicons](http://ionicons.com/))
-* Wrapping this into a user-friendly interface ([flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/)) and including a table ([DT](https://rstudio.github.io/DT/))
-* Allowing data selections to impact across both the map and table ([crosstalk](https://rstudio.github.io/crosstalk/))
+This example was shown as part of a talk at the [Enterprise Applications of the R Language (EARL) conference in London, September 2018](https://earlconf.com/2018/london/#matt-dray).
 
-*Note that none of these data are real. They've been randomly generated.*
+<b>Crosstalk: Shiny-like without Shiny</b>
+
+<i>Self-service interactive tools have great power to support decisions by policy-makers. Shiny apps are a natural fit for this, but it's not always easy to share them within the public sector. This is due to issues like a lack of server space, highly sensitive data and users who aren't R-savvy.
+
+We've approached this problem in the UK's Department for Education by sharing interactive HTML widgets – embeddable JavaScript visualisation libraries – within RMarkdown outputs. Interactivity is, however, limited because selections in one widget don’t impact the data presented in another.
+
+[Joe Cheng's Crosstalk package](http://rstudio.github.io/crosstalk/) overcomes this with shared data objects that react to user inputs, altering the content of multiple widgets on the fly. I'll explain how I used Crosstalk to develop a 'pseudo-app' for exploring schools data with the Leaflet (maps), Plotly (charts) and DT (tables) widgets inside the Flexdashboard framework and how I shared it easily with policy-making users as a static HTML file for exploration in the browser.</i>
+
+#### Tools
+
+##### R
+
+* [R V3.4.4](https://www.r-project.org/)
+* [RStudio v1.1.442](https://www.rstudio.com/)
+
+##### Framework
+
+* [Flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) to provide a frameowrk for embedding the content
+
+##### Widgets
+
+* [Leaflet](https://rstudio.github.io/leaflet/) for the interactive map
+* [DT](https://rstudio.github.io/DT/) for the interactive table
+* [Crosstalk](https://rstudio.github.io/crosstalk/)  to link the widgets
+
+##### Icons
+
+* [Ion icons](https://ionicons.com/) for icons
+
+##### Code
+
+The code for this tool is available from [github.com/matt-dray/earl18-crosstalk](https://github.com/matt-dray/earl18-crosstalk)
+
 
 Column {data-width=600}
 -------------------------------------
@@ -45,7 +74,7 @@ sch %>%
   leaflet::addProviderTiles(providers$OpenStreetMap) %>% 
   leaflet::addAwesomeMarkers(
     popup = ~paste0(
-      "<h2>", sch$sch_name, "</h2>",
+      "<h5>", sch$sch_name, "</h5>",
       
       "<table style='width:100%'>",
       

@@ -23,7 +23,7 @@ map <- sch %>%
   leaflet::addProviderTiles(providers$OpenStreetMap) %>% 
   leaflet::addAwesomeMarkers(
     popup = ~paste0(
-      "<h2>", sch$sch_name, "</h2>",
+      "<h5>", sch$sch_name, "</h5>",
       
       "<table style='width:100%'>",
       

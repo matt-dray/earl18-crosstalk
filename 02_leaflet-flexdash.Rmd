@@ -4,7 +4,8 @@ author: "Matt Dray"
 output:
   flexdashboard::flex_dashboard:
     theme: paper
-    favicon: img/map.png
+    favicon: img/ios7-location-outline.png
+    source_code: embed
 ---
 
 ```{r setup, include=FALSE}
@@ -14,7 +15,7 @@ library(dplyr)  # tidy data manipulation
 library(leaflet)  # interative mapping
 ```
 
-Column {data-width=400}
+Column {data-width=250}
 -------------------------------------
 
 ### About
@@ -27,43 +28,30 @@ Column {data-width=400}
 
 #### Blurb
 
-This example was shown as part of a talk at the [Enterprise Applications of the R Language (EARL) conference in London, September 2018](https://earlconf.com/2018/london/#matt-dray).
+This example was shown as part of the talk <i>Crosstalk: Shiny-like without Shiny</i> at the [Enterprise Applications of the R Language (EARL) conference in London, September 2018](https://earlconf.com/2018/london/#matt-dray).
 
-<b>Crosstalk: Shiny-like without Shiny</b>
+> Self-service interactive tools have great power to support decisions by policy-makers. Shiny apps are a natural fit for this, but it's not always easy to share them within the public sector. This is due to issues like a lack of server space, highly sensitive data and users who aren't R-savvy.
+>
+>We've approached this problem in the UK's Department for Education by sharing interactive HTML widgets – embeddable JavaScript visualisation libraries – within RMarkdown outputs. Interactivity is, however, limited because selections in one widget don’t impact the data presented in another.
+>
+>[Joe Cheng's Crosstalk package](http://rstudio.github.io/crosstalk/) overcomes this with shared data objects that react to user inputs, altering the content of multiple widgets on the fly. I'll explain how I used Crosstalk to develop a 'pseudo-app' for exploring schools data with the Leaflet (maps), Plotly (charts) and DT (tables) widgets inside the Flexdashboard framework and how I shared it easily with policy-making users as a static HTML file for exploration in the browser.
 
-<i>Self-service interactive tools have great power to support decisions by policy-makers. Shiny apps are a natural fit for this, but it's not always easy to share them within the public sector. This is due to issues like a lack of server space, highly sensitive data and users who aren't R-savvy.
-
-We've approached this problem in the UK's Department for Education by sharing interactive HTML widgets – embeddable JavaScript visualisation libraries – within RMarkdown outputs. Interactivity is, however, limited because selections in one widget don’t impact the data presented in another.
-
-[Joe Cheng's Crosstalk package](http://rstudio.github.io/crosstalk/) overcomes this with shared data objects that react to user inputs, altering the content of multiple widgets on the fly. I'll explain how I used Crosstalk to develop a 'pseudo-app' for exploring schools data with the Leaflet (maps), Plotly (charts) and DT (tables) widgets inside the Flexdashboard framework and how I shared it easily with policy-making users as a static HTML file for exploration in the browser.</i>
+Note that this material is restricted to **published data only** and **does not reflect or constitute official government policy**.
 
 #### Tools
 
-##### R
+[R v3.4.4](https://www.r-project.org/) and [RStudio v1.1.442](https://www.rstudio.com/) were used to build this tool.
 
-* [R V3.4.4](https://www.r-project.org/)
-* [RStudio v1.1.442](https://www.rstudio.com/)
+The packages used were:
 
-##### Framework
-
-* [Flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) to provide a frameowrk for embedding the content
-
-##### Widgets
-
+* [Flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) to create a frame for the content
 * [Leaflet](https://rstudio.github.io/leaflet/) for the interactive map
-* [DT](https://rstudio.github.io/DT/) for the interactive table
-* [Crosstalk](https://rstudio.github.io/crosstalk/)  to link the widgets
-
-##### Icons
-
 * [Ion icons](https://ionicons.com/) for icons
 
-##### Code
-
-The code for this tool is available from [github.com/matt-dray/earl18-crosstalk](https://github.com/matt-dray/earl18-crosstalk)
+The code for this tool is available from [github.com/matt-dray/earl18-crosstalk](https://github.com/matt-dray/earl18-crosstalk). The presentation is available from [github.com/matt-dray/earl18-presentation](https://github.com/matt-dray/earl18-presentation).
 
 
-Column {data-width=600}
+Column {data-width=750}
 -------------------------------------
     
 ### Interactive map
@@ -107,26 +95,20 @@ sch %>%
       "<th>", sch$geo_la, "</th>",
       "</tr>"
     ),  # end popup()
-    
-
     icon = awesomeIcons(
-      
-      library = "fa",
-
+      library = "ion",
       icon = ifelse(
-        test = sch$ofsted_rating == "Outstanding",
-        yes = "fa-star",
-        no = "fa-circle"
+        test = sch$ofsted_rating == "1 Outstanding",
+        yes = "ion-android-star-outline",
+        no = "ion-android-radio-button-off"
       ),
-
       iconColor = "white",
-      
       markerColor = ifelse(
         test = sch$sch_phase == "Primary", 
         yes = "red",
         no = "blue"
       )
     )
-    
-  )  # end addAwesomeMarkers()
+  ) %>%   # end addAwesomeMarkers()
+  leaflet::addMeasure()
 ```

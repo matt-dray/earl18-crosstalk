@@ -23,7 +23,7 @@ map <- sch %>%
   leaflet::addProviderTiles(providers$OpenStreetMap) %>% 
   leaflet::addAwesomeMarkers(
     popup = ~paste0(
-      "<h5>", sch$sch_name, "</h5>",
+      "<h3>", sch$sch_name, "</h3>",
       
       "<table style='width:100%'>",
       
@@ -56,27 +56,21 @@ map <- sch %>%
       "<th>", sch$geo_la, "</th>",
       "</tr>"
     ),  # end popup()
-    
-
     icon = awesomeIcons(
-      
-      library = "fa",
-
+      library = "ion",
       icon = ifelse(
-        test = sch$ofsted_rating == "Outstanding",
-        yes = "fa-star",
-        no = "fa-circle"
+        test = sch$ofsted_rating == "1 Outstanding",
+        yes = "ion-android-star-outline",
+        no = "ion-android-radio-button-off"
       ),
-
       iconColor = "white",
-      
       markerColor = ifelse(
         test = sch$sch_phase == "Primary", 
         yes = "red",
         no = "blue"
       )
     )
-    
-  )  # end addAwesomeMarkers()
+  ) %>%   # end addAwesomeMarkers()
+leaflet::addMeasure()
 
 print(map)

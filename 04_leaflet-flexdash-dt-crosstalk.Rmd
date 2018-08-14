@@ -4,7 +4,8 @@ author: "Matt Dray"
 output:
   flexdashboard::flex_dashboard:
     theme: paper
-    favicon: img/map.png
+    favicon: img/ios7-location-outline.png
+    source_code: embed
 ---
 
 ```{r setup, include=FALSE}
@@ -17,7 +18,7 @@ sch <- readRDS("data/gias_sample.RDS")
 sd <- SharedData$new(sch)
 ```
 
-Interactives
+Interactives {data-icon="ion-stats-bars"}
 =====================================  
 
 Column {data-width=400}
@@ -50,20 +51,20 @@ bscols(
 
 bscols(
   filter_slider(
-    id = "pup_count",
+    id = "pupil_count",
     label = "Pupil count",
     sharedData = sd,
-    column = ~pup_count,
+    column = ~pupil_count,
     step = 10,
     round = TRUE,
     sep = "",
     ticks = FALSE
   ),
   filter_slider(
-    id = "pup_percent_fsm",
+    id = "pupil_percent_fsm",
     label = "Percentage Free School Meals",
     sharedData = sd,
-    column = ~pup_percent_fsm,
+    column = ~pupil_percent_fsm,
     step = 1,
     round = TRUE,
     sep = "",
@@ -75,35 +76,53 @@ bscols(
 ### Datatable
     
 ```{r datatable}
-DT::datatable(
-  sd,
-  filter = "top",  # allows filtering on each column
-  extensions = c(
-    "Buttons",  # add download buttons, etc
-    "Scroller"  # for scrolling down the rows rather than pagination
-  ),
-  rownames = FALSE,  # remove rownames
-  # style = "bootstrap",
-  class = "compact",
-  width = "100%",
-  options = list(
-    dom = "Blrtip",  # specify content (search box, etc)
-    deferRender = TRUE,
-    scrollY = 300,
-    scroller = TRUE,
-    columnDefs = list(
-      list(
-        visible = FALSE,
-        targets = c(2, 3, 5:15)
+sd %>% 
+  DT::datatable(
+    filter = "top",  # allows filtering on each column
+    extensions = c(
+      "Buttons",  # add download buttons, etc
+      "Scroller"  # for scrolling down the rows rather than pagination
+    ),
+    rownames = FALSE,  # remove rownames
+    style = "bootstrap",
+    class = "compact",
+    width = "100%",
+    options = list(
+      dom = "Blrtip",  # specify content (search box, etc)
+      deferRender = TRUE,
+      scrollY = 300,
+      scroller = TRUE,
+      columnDefs = list(
+        list(
+          visible = FALSE,
+          targets = c(2, 3, 5:15)
+        )
+      ), 
+      buttons = list(
+        I("colvis"),  # turn columns on and off
+        "csv",  # download as .csv
+        "excel"  # download as .xlsx
       )
-    ), 
-    buttons = list(
-      I("colvis"),  # turn columns on and off
-      "csv",  # download as .csv
-      "excel"  # download as .xlsx
+    ),
+    colnames = c(
+      "URN" = "sch_urn",
+      "Name" = "sch_name",
+      "Type" = "sch_type",
+      "Type group" = "sch_type_group",
+      "Phase" = "sch_phase",
+      "Ofsted rating" = "ofsted_rating",
+      "Inspection date" = "ofsted_date",
+      "Pupil count" = "pupil_count",
+      "Pupil gender" = "pupil_gender",
+      "FSM per cent" = "pupil_percent_fsm",
+      "Town" = "geo_town",
+      "Postcode" = "geo_postcode",
+      "Local authority" = "geo_la",
+      "Rural-urban class" = "geo_urban_rural",
+      "RSC region" = "geo_rsc_region",
+      "Coordinates" = "geometry"
     )
   )
-)
 ```
 
 Column {data-width=600}
@@ -150,45 +169,39 @@ sd %>%
       "<th>", sch$geo_la, "</th>",
       "</tr>"
     ),  # end popup()
-    
-
     icon = awesomeIcons(
-      
-      library = "fa",
-
+      library = "ion",
       icon = ifelse(
-        test = sch$ofsted_rating == "Outstanding",
-        yes = "fa-star",
-        no = "fa-circle"
+        test = sch$ofsted_rating == "1 Outstanding",
+        yes = "ion-android-star-outline",
+        no = "ion-android-radio-button-off"
       ),
-
       iconColor = "white",
-      
       markerColor = ifelse(
         test = sch$sch_phase == "Primary", 
         yes = "red",
         no = "blue"
       )
     )
-    
-  )  # end addAwesomeMarkers()
+  ) %>%   # end addAwesomeMarkers()
+  leaflet::addMeasure()
 ```
 
-Information {data-orientation=rows}
+Information {data-orientation=rows data-icon="fa-info-circle"}
 ===================================== 
 
 
 ### Blurb
 
-This example was shown as part of a talk at the [Enterprise Applications of the R Language (EARL) conference in London, September 2018](https://earlconf.com/2018/london/#matt-dray).
+This example was shown as part of the talk <i>Crosstalk: Shiny-like without Shiny</i> at the [Enterprise Applications of the R Language (EARL) conference in London, September 2018](https://earlconf.com/2018/london/#matt-dray).
 
-<b>Crosstalk: Shiny-like without Shiny</b>
+> Self-service interactive tools have great power to support decisions by policy-makers. Shiny apps are a natural fit for this, but it's not always easy to share them within the public sector. This is due to issues like a lack of server space, highly sensitive data and users who aren't R-savvy.
+>
+>We've approached this problem in the UK's Department for Education by sharing interactive HTML widgets – embeddable JavaScript visualisation libraries – within RMarkdown outputs. Interactivity is, however, limited because selections in one widget don’t impact the data presented in another.
+>
+>[Joe Cheng's Crosstalk package](http://rstudio.github.io/crosstalk/) overcomes this with shared data objects that react to user inputs, altering the content of multiple widgets on the fly. I'll explain how I used Crosstalk to develop a 'pseudo-app' for exploring schools data with the Leaflet (maps), Plotly (charts) and DT (tables) widgets inside the Flexdashboard framework and how I shared it easily with policy-making users as a static HTML file for exploration in the browser.
 
-<i>Self-service interactive tools have great power to support decisions by policy-makers. Shiny apps are a natural fit for this, but it's not always easy to share them within the public sector. This is due to issues like a lack of server space, highly sensitive data and users who aren't R-savvy.
-
-We've approached this problem in the UK's Department for Education by sharing interactive HTML widgets – embeddable JavaScript visualisation libraries – within RMarkdown outputs. Interactivity is, however, limited because selections in one widget don’t impact the data presented in another.
-
-[Joe Cheng's Crosstalk package](http://rstudio.github.io/crosstalk/) overcomes this with shared data objects that react to user inputs, altering the content of multiple widgets on the fly. I'll explain how I used Crosstalk to develop a 'pseudo-app' for exploring schools data with the Leaflet (maps), Plotly (charts) and DT (tables) widgets inside the Flexdashboard framework and how I shared it easily with policy-making users as a static HTML file for exploration in the browser.</i>
+Note that this material is restricted to **published data only** and **does not reflect or constitute official government policy**.
 
 ### How to use
 
@@ -211,7 +224,7 @@ You can:
 * click a marker to reveal a popup with information about that school
 * click the button showing a broken square (top-left under the zoom options) to select points on the map using a window that's draggable (click and hold the grid icon in the upper left) and resizeable (click and drag the white boxes in each corner)
 
-#### Datatable
+#### Interactive table
 
 You can:
 
@@ -223,25 +236,14 @@ You can:
 
 ### Tools
 
-#### R
+[R v3.4.4](https://www.r-project.org/) and [RStudio v1.1.442](https://www.rstudio.com/) were used to build this tool.
 
-* [R V3.4.4](https://www.r-project.org/)
-* [RStudio v1.1.442](https://www.rstudio.com/)
+The packages used were:
 
-#### Framework
-
-* [Flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) to provide a frameowrk for embedding the content
-
-#### Widgets
-
+* [Flexdashboard](https://rmarkdown.rstudio.com/flexdashboard/) to create a frame for the content
 * [Leaflet](https://rstudio.github.io/leaflet/) for the interactive map
 * [DT](https://rstudio.github.io/DT/) for the interactive table
-* [Crosstalk](https://rstudio.github.io/crosstalk/)  to link the widgets
+* [Crosstalk](https://rstudio.github.io/crosstalk/) for widget interactivity
+* [Ion icons](https://ionicons.com/) and [Font Awesome](https://fontawesome.com/) for icons
 
-#### Icons
-
-* [Ion icons](https://ionicons.com/) for icons
-
-#### Code
-
-The code for this tool is available from [github.com/matt-dray/earl18-crosstalk](https://github.com/matt-dray/earl18-crosstalk)
+The code for this tool is available from [github.com/matt-dray/earl18-crosstalk](https://github.com/matt-dray/earl18-crosstalk). The presentation is available from [github.com/matt-dray/earl18-presentation](https://github.com/matt-dray/earl18-presentation).

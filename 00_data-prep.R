@@ -60,9 +60,9 @@ gias_cut <- gias %>%
     ofsted_rating = ofstedrating_name,
     ofsted_date = ofstedlastinsp,
     # pupils
-    pup_count = numberofpupils,
-    pup_gender = gender_name,
-    pup_percent_fsm = percentagefsm,
+    pupil_count = numberofpupils,
+    pupil_gender = gender_name,
+    pupil_percent_fsm = percentagefsm,
     # geography
     geo_town = town,
     geo_postcode = postcode,
@@ -73,17 +73,25 @@ gias_cut <- gias %>%
     geo_rsc_region = rscregion_name
   ) %>% 
   mutate_at(
-    vars(pup_count,pup_percent_fsm,geo_easting,geo_northing),
+    vars(pupil_count,pupil_percent_fsm,geo_easting,geo_northing),
     as.numeric  # make all these columns numeric
     ) %>% 
   mutate(
+    sch_urn = as.character(sch_urn),
     ofsted_date = lubridate::dmy(ofsted_date),
-    sch_urn = as.character(sch_urn)
+    ofsted_rating = case_when(
+      ofsted_rating == "Outstanding" ~ "1 Outstanding",
+      ofsted_rating == "Good" ~ "2 Good",
+      ofsted_rating == "Requires improvement" ~ "3 Requires improvement",
+      ofsted_rating == "Serious Weaknesses" ~ "4 Serious weakness",
+      ofsted_rating == "Special Measures" ~ "5 Special measures"
+    )
   ) %>% 
   filter(complete.cases(.))  # only schools with complete info for all columns
 
 
 # Convert to sf -----------------------------------------------------------
+
 
 # Convert the dataframe to a spatial dataframe with the sf package
 # Create a listcol of latlongs and add spatial metadata

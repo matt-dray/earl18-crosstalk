@@ -17,6 +17,10 @@ The talk demonstrated a four-step process in the development of an interactive m
 3. [Leaflet + Flexdashboard + DT](https://matt-dray.github.io/earl18-crosstalk/03_leaflet-flexdash-dt.html)
 4. [Leaflet + Flexdashboard + DT + Crosstalk](https://matt-dray.github.io/earl18-crosstalk/04_leaflet-flexdash-dt-crosstalk.html)
 
+And in meme format if you prefer:
+
+![](https://raw.githubusercontent.com/matt-dray/earl18-presentation/master/memes/expanding-brain.jpg)
+
 ## Blurb
 
 >Crosstalk: Shiny-like without Shiny

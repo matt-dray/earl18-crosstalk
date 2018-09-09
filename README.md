@@ -23,6 +23,8 @@ And in meme format if you prefer:
 
 ## Blurb
 
+[The blurb is available on the EARL website](https://earlconf.com/2018/london/#matt-dray).
+
 >Crosstalk: Shiny-like without Shiny
 >
 >Self-service interactive tools have great power to support decisions by policy-makers. Shiny apps are a natural fit for this, but it's not always easy to share them within the public sector. This is due to issues like a lack of server space, highly sensitive data and users who aren't R-savvy. 

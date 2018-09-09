@@ -4,13 +4,13 @@
 
 This repo contains code for some materials I used in a presentation at the [EARL (Enterprise Applications of the R Language) conference](https://earlconf.com/2018/london/) in London on 12 September 2018.
 
-The presentation was about use of [the `crosstalk` package](http://rstudio.github.io/crosstalk/) to help solve a business problem. You can [view the presentation in your browser](https://matt-dray.github.io/earl18-presentation/).
+The presentation was about use of [the `crosstalk` package](http://rstudio.github.io/crosstalk/) to help solve a business problem. You can [view the presentation in your browser](https://matt-dray.github.io/earl18-presentation/) and [access the code from the dedicated repo](https://github.com/matt-dray/earl18-presentation).
 
 Note that this talk was restricted to **published data only** and the content of this talk **does not reflect or constitute official government policy**.
 
 ## This repo
 
-The talk demonstrated a four-step process in the development of an interactive map tool. Example code is hosted in this repo and the html outputs are viewable in-browser. The steps are shown below (click to be taken to the example):
+The talk demonstrated a four-step process in the development of an interactive map tool given user feedback at each stage. Example code is hosted in this repo and the HTML outputs are viewable in-browser. The steps are shown below (click to be taken to the example):
 
 1. [Leaflet](https://matt-dray.github.io/earl18-crosstalk/01_leaflet.html)
 2. [Leaflet + Flexdashboard](https://matt-dray.github.io/earl18-crosstalk/02_leaflet-flexdash.html)
